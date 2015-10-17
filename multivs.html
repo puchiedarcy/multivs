@@ -12,9 +12,7 @@
         <title>MultiVS</title>
     </head>
    <body>
-        <div id="stage">
-
-        </div>
+        <div id="stage"></div>
 
         <script>
             var stage = $('#stage');
@@ -41,10 +39,41 @@
         
         <script type="text/babel">
             var Settings = React.createClass({
-                render: function () {
+                render: function() {
                     return (
                         <div className="settings">
                             Settings!
+                        </div>
+                    );
+                }
+            });
+            
+            var Rightpanel = React.createClass({
+                render: function() {
+                    return (
+                        <div className="rightpanel">
+                            <Scoreboard />
+                            <Chat />
+                        </div>
+                    );
+                }
+            });
+            
+            var Scoreboard = React.createClass({
+                render: function() {
+                    return (
+                        <div className="scoreboard">
+                            Scoreboard!
+                        </div>
+                    );
+                }
+            });
+            
+            var Chat = React.createClass({
+                render: function() {
+                    return (
+                        <div className="chat">
+                            Chat!
                         </div>
                     );
                 }
@@ -55,6 +84,7 @@
                     return (
                         <div className="multivs">
                             <Settings />
+                            <Rightpanel />
                         </div>
                     );
                 }
