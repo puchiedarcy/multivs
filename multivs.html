@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="static/styles.css" rel="stylesheet" type="text/css">
+
+        <script src="lib/pubnub-3.7.15.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://fb.me/react-0.14.0.min.js"></script>
+        <script src="https://fb.me/react-dom-0.14.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+        
+        <title>MultiVS</title>
+    </head>
+   <body>
+        <div id="stage">
+
+        </div>
+
+        <script>
+            var stage = $('#stage');
+
+            var pubnub = PUBNUB({
+                subscribe_key: 'sub-d42094ba-22dd-11e2-9d54-8be12a68240a',
+                publish_key: 'pub-d5abc57f-7dea-4275-9253-18305c0f27e1'
+            });
+
+            pubnub.time(
+               function(time){
+                  stage.append('<p>' + time + '</p>');
+               }
+            );
+
+            pubnub.subscribe({
+                channel: 'racetrax',
+                message: function(m){stage.append('<p>' + m.text + '</p>')},
+                error: function (error) {
+                    console.log(JSON.stringify(error));
+                }
+            });
+        </script>
+        
+        <script type="text/babel">
+            var MultiVS = React.createClass({
+                render: function() {
+                    return (
+                        <div className="multivs">
+                            Hello, World!
+                        </div>
+                    );
+                }
+            });
+
+            ReactDOM.render(
+                <MultiVS />,
+                document.getElementById('stage')
+            );
+        </script>
+   </body>
+</html>
