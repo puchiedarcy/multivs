@@ -40,11 +40,21 @@
         </script>
         
         <script type="text/babel">
+            var Settings = React.createClass({
+                render: function () {
+                    return (
+                        <div className="settings">
+                            Settings!
+                        </div>
+                    );
+                }
+            });
+            
             var MultiVS = React.createClass({
                 render: function() {
                     return (
                         <div className="multivs">
-                            Hello, World!
+                            <Settings />
                         </div>
                     );
                 }

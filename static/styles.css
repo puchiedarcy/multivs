@@ -3,3 +3,14 @@
     width: 750px;
     border: 1px solid #DDD;
 }
+
+.multivs {
+    border: 1px solid #D00;
+    height: 550px;
+}
+
+.settings {
+    border: 1px solid #0D0;
+    width: 100%;
+    height: 50px;
+}
