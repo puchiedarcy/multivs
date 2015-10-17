@@ -41,9 +41,12 @@
                     return (
                         <div className="rightpanel">
                             <Scoreboard />
-                            <Chat />
+                            <Chat onGuess={this.onGuess}/>
                         </div>
                     );
+                },
+                onGuess: function(guess) {
+                    this.props.onGuess(guess);
                 }
             });
             
@@ -61,9 +64,19 @@
                 render: function() {
                     return (
                         <div className="chat">
-                            Chat!
+                            <div className="guesses"></div>
+                            <form className="guessForm" onSubmit={this.handleSubmit}>
+                                <input type="text" ref="guess" defaultValue="Guess here!" />
+                                <input type="submit" value="Guess!" />
+                            </form>
                         </div>
                     );
+                },
+                handleSubmit: function(e) {
+                    e.preventDefault();
+                    var guess = this.refs.guess.value.trim();
+                    this.refs.guess.value = '';
+                    this.props.onGuess(guess);
                 }
             });
             
@@ -73,24 +86,32 @@
                         pubnub: PUBNUB({
                             subscribe_key: 'sub-d42094ba-22dd-11e2-9d54-8be12a68240a',
                             publish_key: 'pub-d5abc57f-7dea-4275-9253-18305c0f27e1'
-                        })
+                        }),
+                        channel: ''
                     }
                 },
                 render: function() {
                     return (
                         <div className="multivs">
                             <Settings onJoinChannel={this.joinChannel} />
-                            <Rightpanel />
+                            <Rightpanel onGuess={this.onGuess} />
                         </div>
                     );
                 },
                 joinChannel: function(channel) {
+                    this.state.channel = channel;
                     this.state.pubnub.subscribe({
                         channel: channel,
                         message: function(m){console.log(m)},
                         error: function (error) {
                             console.log(JSON.stringify(error));
                         }
+                    });
+                },
+                onGuess: function(guess) {
+                    this.state.pubnub.publish({
+                        channel: this.state.channel,
+                        message: {'guess': guess}
                     });
                 }
             });

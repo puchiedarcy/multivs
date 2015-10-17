@@ -17,7 +17,7 @@
 
 .rightpanel {
     border: 1px solid #00D;
-    width: 30%;
+    width: 32%;
     height: 90%;
     float: right;
 }
@@ -30,4 +30,9 @@
 .chat {
     border: 1px solid #00D;
     height: 50%;
+}
+
+.guesses {
+    border: 1px solid #0DD;
+    height: 80%;
 }
