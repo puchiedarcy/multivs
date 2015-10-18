@@ -41,7 +41,7 @@
                     return (
                         <div className="rightpanel">
                             <Scoreboard />
-                            <Chat onGuess={this.onGuess}/>
+                            <Chat onGuess={this.onGuess} lastFiveGuesses={this.props.lastFiveGuesses} />
                         </div>
                     );
                 },
@@ -62,9 +62,14 @@
             
             var Chat = React.createClass({
                 render: function() {
+                    var lastFiveGuesses = this.props.lastFiveGuesses.map(function (guess) {
+                        return (
+                            <li>{guess}</li>
+                        );
+                    });
                     return (
                         <div className="chat">
-                            <div className="guesses"></div>
+                            <ul className="guesses">{lastFiveGuesses}</ul>
                             <form className="guessForm" onSubmit={this.handleSubmit}>
                                 <input type="text" ref="guess" defaultValue="Guess here!" />
                                 <input type="submit" value="Guess!" />
@@ -87,26 +92,40 @@
                             subscribe_key: 'sub-d42094ba-22dd-11e2-9d54-8be12a68240a',
                             publish_key: 'pub-d5abc57f-7dea-4275-9253-18305c0f27e1'
                         }),
-                        channel: ''
+                        channel: '',
+                        lastFiveGuesses: ['', '', '', '', '']
                     }
                 },
                 render: function() {
                     return (
                         <div className="multivs">
                             <Settings onJoinChannel={this.joinChannel} />
-                            <Rightpanel onGuess={this.onGuess} />
+                            <Rightpanel onGuess={this.onGuess} lastFiveGuesses={this.state.lastFiveGuesses} />
                         </div>
                     );
                 },
                 joinChannel: function(channel) {
                     this.state.channel = channel;
+                    var recvGuess = this.recvGuess;
                     this.state.pubnub.subscribe({
                         channel: channel,
-                        message: function(m){console.log(m)},
+                        message: function(m){recvGuess(m.guess)},
                         error: function (error) {
                             console.log(JSON.stringify(error));
                         }
                     });
+                },
+                recvGuess: function(guess) {
+                    var lastFiveGuesses = this.state.lastFiveGuesses;
+                    lastFiveGuesses[4] = lastFiveGuesses[3];
+                    lastFiveGuesses[3] = lastFiveGuesses[2];
+                    lastFiveGuesses[2] = lastFiveGuesses[1];
+                    lastFiveGuesses[1] = lastFiveGuesses[0];
+                    lastFiveGuesses[0] = guess;
+                    
+                    var newState = this.state;
+                    newState.lastFiveGuesses = lastFiveGuesses;
+                    this.setState(newState);
                 },
                 onGuess: function(guess) {
                     this.state.pubnub.publish({
